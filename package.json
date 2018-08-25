@@ -1,0 +1,37 @@
+{
+  "name": "rqlite-client",
+  "version": "0.1.0",
+  "description": "nodejs client for rqlite, with cluster support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "release": "standard-version"
+  },
+  "keywords": [
+    "rqlite"
+  ],
+  "author": "zf",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.1",
+    "@types/node-fetch": "^2.1.2",
+    "jest": "^23.5.0",
+    "standard-version": "^4.4.0",
+    "ts-jest": "^23.1.4",
+    "typescript": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zweifisch/rqlite-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zweifisch/rqlite-client/issues"
+  },
+  "homepage": "https://github.com/zweifisch/rqlite-client#readme"
+}
