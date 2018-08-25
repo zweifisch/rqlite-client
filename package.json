@@ -26,6 +26,9 @@
     "ts-jest": "^23.1.4",
     "typescript": "^3.0.1"
   },
+  "engines": {
+    "node": ">=8.6.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zweifisch/rqlite-client.git"
