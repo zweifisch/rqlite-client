@@ -4,20 +4,23 @@
 [![Build Status][travis-image]][travis-url]
 [![Node.js Version][node-version-image]][node-version-url]
 
-nodejs client for [rqlite](https://github.com/rqlite/rqlite), with cluster support
+nodejs client for [rqlite](https://github.com/rqlite/rqlite), with cluster support, [documentation](https://zweifisch.github.io/rqlite-client/)
 
 ```js
 const { Client } = require('rqlite-client')
 
 const client = new Client(['http://localhost:4001', 'http://localhost:4003'])
 
-async function main() {
-
-    await client.exec(`\
+const schema = `\
 CREATE TABLE IF NOT EXISTS account (
   id integer not null primary key,
   name text,
-  balance integer not null default 0)`)
+  balance integer not null default 0
+)`
+
+async function main() {
+
+    await client.exec(schema)
 
     await client.exec('INSERT INTO account(name, balance) VALUES("foo", 10)')
     await client.exec('INSERT INTO account(name, balance) VALUES("bar", 10)')

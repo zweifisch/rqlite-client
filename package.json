@@ -7,6 +7,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
+    "doc": "typedoc --out docs && touch docs/.nojekyll",
     "release": "standard-version"
   },
   "keywords": [
@@ -24,6 +25,7 @@
     "jest": "^23.5.0",
     "standard-version": "^4.4.0",
     "ts-jest": "^23.1.4",
+    "typedoc": "^0.12.0",
     "typescript": "^3.0.1"
   },
   "engines": {
