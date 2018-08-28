@@ -24,24 +24,32 @@ balance integer not null default 0)`)
 })
 
 test('insertion', async () => {
-    await client.exec('INSERT INTO account(name, balance) VALUES("foo", 10)')
-    await client.exec('INSERT INTO account(name, balance) VALUES("bar", 10)')
+    expect(await client.exec('INSERT INTO account(name, balance) VALUES("foo", 10)')).toHaveProperty('rows_affected', 1)
+    expect(await client.exec('INSERT INTO account(name, balance) VALUES("bar", 10)')).toHaveProperty('last_insert_id')
 })
 
 test('atomic operation', async () => {
-    let results = await client.batch([
+    let [r1, r2] = await client.batch([
         'update account set balance = balance - 1 where name = "foo"',
         'update account set balance = balance + 1 where name = "bar"',
     ])
+    expect(r1).toHaveProperty('rows_affected', 1)
+    expect(r2).toHaveProperty('rows_affected', 1)
 })
 
 test('select', async () => {
-    let queryResult = await client.query('select name,balance from account')
-    expect(queryResult.values).toEqual([['foo', 9], ['bar', 11]])
+    expect(await client.query('select name,balance from account'))
+        .toEqual([{ name: 'foo', balance: 9 }, { name: 'bar', balance: 11 }])
+
+    expect(await client.query('select name,balance from account where name = "ada"'))
+        .toEqual([])
+
+    expect(await client.query('select 1 as a'))
+        .toEqual([{ a: 1 }])
 })
 
 test('deletion', async () => {
-    let result = await client.exec('delete from account')
+    expect(await client.exec('delete from account')).toHaveProperty('rows_affected', 2)
 })
 
 test('err', async () => {

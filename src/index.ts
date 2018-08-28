@@ -32,6 +32,14 @@ interface Response<T> {
 
 const redirection = new Set([301, 302, 307])
 
+function zipmap(keys: Array<string>, values: Array<any>): any {
+    let ret = {}
+    for (let i = 0; i < keys.length; i++) {
+        ret[keys[i]] = values[i]
+    }
+    return ret
+}
+
 function retry(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     let method = descriptor.value
     descriptor.value = async function(...args) {
@@ -100,7 +108,7 @@ export class Client {
     }
 
     @retry
-    async query(sql: string): Promise<QueryResult> {
+    async query(sql: string): Promise<Array<any>> {
         let result = await fetch(`${this.url}/db/query?q=${encodeURIComponent(sql)}`)
         if (result.status >= 400) {
             throw Error(`${result.status} ${await result.text()}`)
@@ -109,7 +117,8 @@ export class Client {
         if ('error' in resp.results[0]) {
             throw new QueryError((resp.results[0] as ExecError).error)
         }
-        return resp.results[0] as QueryResult
+        let { columns, values = [] } = resp.results[0] as QueryResult
+        return values.map(x => zipmap(columns, x))
     }
 
     @retry
