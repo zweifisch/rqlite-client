@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "doc": "typedoc --out docs && touch docs/.nojekyll",
+    "doc": "typedoc --out docs --mode modules --excludePrivate --exclude '**/*.test.ts' --readme none && touch docs/.nojekyll",
     "release": "standard-version"
   },
   "keywords": [
