@@ -32,10 +32,12 @@ interface Response<T> {
 
 const redirection = new Set([301, 302, 307])
 
-function zipmap(keys: Array<string>, values: Array<any>): any {
+const blobType = new Set(['blob', 'BLOB'])
+
+function unserialize(keys: Array<string>, types: Array<string>, values: Array<any>): any {
     let ret = {}
     for (let i = 0; i < keys.length; i++) {
-        ret[keys[i]] = values[i]
+        ret[keys[i]] = blobType.has(types[i]) ? Buffer.from(values[i], 'base64') : values[i]
     }
     return ret
 }
@@ -117,8 +119,8 @@ export class Client {
         if ('error' in resp.results[0]) {
             throw new QueryError((resp.results[0] as ExecError).error)
         }
-        let { columns, values = [] } = resp.results[0] as QueryResult
-        return values.map(x => zipmap(columns, x))
+        let { columns, values = [], types } = resp.results[0] as QueryResult
+        return values.map(x => unserialize(columns, types, x))
     }
 
     @retry

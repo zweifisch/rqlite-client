@@ -16,7 +16,7 @@ test('concurrency', async () => {
 })
 
 test('create table', async () => {
-    let result = await client.exec(`\
+    await client.exec(`\
 CREATE TABLE if not exists account (
 id integer not null primary key,
 name text,
@@ -48,8 +48,20 @@ test('select', async () => {
         .toEqual([{ a: 1 }])
 })
 
+test('blob', async () => {
+    await client.exec(`\
+CREATE TABLE if not exists avatar (
+ id integer not null primary key,
+ avatar blob
+)`)
+    expect(await client.exec("INSERT INTO avatar(avatar) VALUES(X'00FF')")).toHaveProperty('rows_affected', 1)
+    let [{ avatar }] = await client.query('select avatar from avatar limit 1')
+    expect(avatar).toEqual(Buffer.from([0, 255]))
+})
+
 test('deletion', async () => {
     expect(await client.exec('delete from account')).toHaveProperty('rows_affected', 2)
+    expect(await client.exec('delete from avatar')).toHaveProperty('rows_affected', 1)
 })
 
 test('err', async () => {
