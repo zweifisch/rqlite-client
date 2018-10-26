@@ -37,8 +37,12 @@ const blobType = new Set(['blob', 'BLOB'])
 function unserialize(keys: Array<string>, types: Array<string>, values: Array<any>): any {
     let ret = {}
     for (let i = 0; i < keys.length; i++) {
+      if (values[i] !== null)
         ret[keys[i]] = blobType.has(types[i]) ? Buffer.from(values[i], 'base64') : values[i]
+      else
+        ret[keys[i]] = values[i]
     }
+
     return ret
 }
 
